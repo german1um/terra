@@ -1,5 +1,6 @@
 package com.terra
 
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
@@ -7,5 +8,5 @@ import org.springframework.boot.runApplication
 class TerraApplication
 
 fun main(args: Array<String>) {
-	runApplication<TerraApplication>(*args)
+	SpringApplication.run(TerraApplication::class.java, *args)
 }
