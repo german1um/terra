@@ -30,7 +30,7 @@ class AmadeusPlaceApi : PlaceApi {
         }
     }
 
-    override fun place(lat: Double, lng: Double, radius: Int) {
+    override fun places(lat: Double, lng: Double, radius: Int) {
         val response = api.placeByLocationAndRadius(
                 auth = "Bearer ${config.token}",
                 latitude = lat,
@@ -39,7 +39,14 @@ class AmadeusPlaceApi : PlaceApi {
         ).execute()
     }
 
-    override fun place(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int) {
-
+    override fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int) {
+        val response = api.placeByLocationAndRadius(
+                auth = "Bearer ${config.token}",
+                latitude = lat,
+                longitude = lng,
+                radius = radius,
+                pageLimit = pageLimit,
+                pageOffset = pageOffset
+        ).execute()
     }
 }
