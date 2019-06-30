@@ -23,7 +23,7 @@ interface AmadeusPlaceApiService {
             @Query("latitude") latitude: Double,
             @Query("longitude") longitude: Double,
             @Query("radius") radius: Int,
-            @Query("page[limit]") pageLimit: Int = 1,
+            @Query("page[limit]") pageLimit: Int = 100,
             @Query("page[offset]") pageOffset: Int = 0
     ): Call<PlaceRequestResult>
 
@@ -34,7 +34,7 @@ interface AmadeusPlaceApiService {
             @Query("west") west: Double,
             @Query("south") south: Double,
             @Query("east") east: Double,
-            @Query("page[limit]") pageLimit: Int = 1,
+            @Query("page[limit]") pageLimit: Int = 100,
             @Query("page[offset]") pageOffset: Int = 0
     ): Call<PlaceRequestResult>
 

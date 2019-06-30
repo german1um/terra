@@ -1,6 +1,10 @@
 package com.terra.apis.placeApi.amadeus
 
 import com.terra.apis.placeApi.PlaceApi
+import com.terra.apis.placeApi.amadeus.entities.PlaceRequestData
+import com.terra.apis.placeApi.amadeus.entities.PlaceRequestResult
+import com.terra.model.Place
+import org.geojson.geometry.Point
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -30,16 +34,18 @@ class AmadeusPlaceApi : PlaceApi {
         }
     }
 
-    override fun places(lat: Double, lng: Double, radius: Int) {
+    override fun places(lat: Double, lng: Double, radius: Int): List<Place> {
         val response = api.placeByLocationAndRadius(
                 auth = "Bearer ${config.token}",
                 latitude = lat,
                 longitude = lng,
                 radius = radius
-        ).execute()
+        ).execute().body() ?: return emptyList()
+
+        return matchAmadeusPlacesToOur(response)
     }
 
-    override fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int) {
+    override fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): List<Place> {
         val response = api.placeByLocationAndRadius(
                 auth = "Bearer ${config.token}",
                 latitude = lat,
@@ -47,6 +53,21 @@ class AmadeusPlaceApi : PlaceApi {
                 radius = radius,
                 pageLimit = pageLimit,
                 pageOffset = pageOffset
-        ).execute()
+        ).execute().body() ?: return emptyList()
+
+        return matchAmadeusPlacesToOur(response)
+    }
+
+    private fun matchAmadeusPlacesToOur(response: PlaceRequestResult): List<Place> {
+        return response.data?.map { data ->
+            Place (
+                    name = data.name ?: "",
+                    description = data.tags?.joinToString {str1 -> " #$str1" } ?: "",
+                    coordinates = Point(
+                            data.geoCode?.longitude ?: 0.0,
+                            data.geoCode?.latitude ?: 0.0
+                    )
+            )
+        } ?: emptyList()
     }
 }
