@@ -19,6 +19,8 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.squareup.retrofit2:retrofit:2.6.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.3.0")
     implementation("com.github.MPriess:GeoJSON-POJO:1.0.1")
     implementation("org.locationtech.jts:jts-core:1.16.1")
     implementation("io.springfox:springfox-swagger2:2.9.2")
