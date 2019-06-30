@@ -1,6 +1,6 @@
-package com.terra.placeApi.amadeus
+package com.terra.apis.placeApi.amadeus
 
-import com.terra.placeApi.PlaceApi
+import com.terra.apis.placeApi.PlaceApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

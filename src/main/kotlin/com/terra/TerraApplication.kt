@@ -1,6 +1,6 @@
 package com.terra
 
-import com.terra.placeApi.amadeus.AmadeusPlaceApi
+import com.terra.apis.placeApi.amadeus.AmadeusPlaceApi
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication
@@ -12,5 +12,5 @@ fun main(args: Array<String>) {
 
 	val api = AmadeusPlaceApi()
 
-	api.place(41.397158, 2.160873, 1)
+	api.places(41.397158, 2.160873, 1)
 }

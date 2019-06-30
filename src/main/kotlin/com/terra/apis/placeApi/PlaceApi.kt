@@ -1,4 +1,4 @@
-package com.terra.placeApi
+package com.terra.apis.placeApi
 
 interface PlaceApi {
 

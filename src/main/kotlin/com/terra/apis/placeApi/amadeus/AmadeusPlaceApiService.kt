@@ -1,7 +1,7 @@
-package com.terra.placeApi.amadeus
+package com.terra.apis.placeApi.amadeus
 
-import com.terra.placeApi.amadeus.entities.AuthRequestResult
-import com.terra.placeApi.amadeus.entities.PlaceRequestResult
+import com.terra.apis.placeApi.amadeus.entities.AuthRequestResult
+import com.terra.apis.placeApi.amadeus.entities.PlaceRequestResult
 import retrofit2.Call
 import retrofit2.http.*
 

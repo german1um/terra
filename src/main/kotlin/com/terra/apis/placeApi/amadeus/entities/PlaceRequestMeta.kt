@@ -1,4 +1,4 @@
-package com.terra.placeApi.amadeus.entities
+package com.terra.apis.placeApi.amadeus.entities
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
