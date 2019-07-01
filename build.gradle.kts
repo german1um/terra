@@ -37,3 +37,9 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "1.8"
     }
 }
+
+//def profiles = "prod"
+//
+//bootRun {
+//    args = ["--spring.profiles.active=" + profiles]
+//}
