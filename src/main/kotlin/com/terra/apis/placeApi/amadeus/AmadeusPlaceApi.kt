@@ -3,9 +3,11 @@ package com.terra.apis.placeApi.amadeus
 import com.terra.apis.placeApi.PlaceApi
 import com.terra.apis.placeApi.amadeus.entities.PlaceRequestResult
 import com.terra.model.Place
+import org.springframework.stereotype.Component
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+@Component
 class AmadeusPlaceApi : PlaceApi {
 
     private val config = AmadeusConfig()
@@ -39,7 +41,6 @@ class AmadeusPlaceApi : PlaceApi {
                 longitude = lng,
                 radius = radius
         ).execute().body() ?: return emptyList()
-
         return matchAmadeusPlacesToOur(response)
     }
 
