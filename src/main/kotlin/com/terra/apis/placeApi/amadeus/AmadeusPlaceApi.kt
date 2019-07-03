@@ -1,10 +1,8 @@
 package com.terra.apis.placeApi.amadeus
 
 import com.terra.apis.placeApi.PlaceApi
-import com.terra.apis.placeApi.amadeus.entities.PlaceRequestData
 import com.terra.apis.placeApi.amadeus.entities.PlaceRequestResult
 import com.terra.model.Place
-import org.geojson.geometry.Point
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -60,13 +58,11 @@ class AmadeusPlaceApi : PlaceApi {
 
     private fun matchAmadeusPlacesToOur(response: PlaceRequestResult): List<Place> {
         return response.data?.map { data ->
-            Place (
+            Place(
                     name = data.name ?: "",
-                    description = data.tags?.joinToString {str1 -> " #$str1" } ?: "",
-                    coordinates = Point(
-                            data.geoCode?.longitude ?: 0.0,
-                            data.geoCode?.latitude ?: 0.0
-                    )
+                    description = data.tags?.joinToString { str1 -> " #$str1" } ?: "",
+                    longitude = data.geoCode?.longitude ?: 0.0,
+                    latitude = data.geoCode?.latitude ?: 0.0
             )
         } ?: emptyList()
     }

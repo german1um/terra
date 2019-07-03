@@ -1,7 +1,5 @@
 package com.terra.model
 
-import org.geojson.geometry.Point
-import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 
@@ -11,5 +9,6 @@ class Place (
         val name: String = "",
         val description: String = "",
         val timesVisited: Int = 0,
-        val coordinates: Point = Point(0.0,0.0)
+        val longitude: Double = 0.0,
+        val latitude: Double = 0.0
 )
