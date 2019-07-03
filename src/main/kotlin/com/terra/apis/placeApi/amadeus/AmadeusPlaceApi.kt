@@ -1,8 +1,10 @@
 package com.terra.apis.placeApi.amadeus
 
 import com.terra.apis.placeApi.PlaceApi
+import com.terra.apis.placeApi.amadeus.entities.PlaceRequestData
 import com.terra.apis.placeApi.amadeus.entities.PlaceRequestResult
 import com.terra.model.Place
+import org.geojson.geometry.Point
 import org.springframework.stereotype.Component
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,15 +25,7 @@ class AmadeusPlaceApi : PlaceApi {
     init {
         api = retrofit.create(AmadeusPlaceApiService::class.java)
 
-        val response = api.auth(
-                clientId = config.clientId,
-                clientSecret = config.clientSecret
-        ).execute()
-
-
-        if (response.body() != null) {
-            config.token = response.body()?.accessToken ?: ""
-        }
+        auth()
     }
 
     override fun places(lat: Double, lng: Double, radius: Int): List<Place> {
@@ -40,8 +34,14 @@ class AmadeusPlaceApi : PlaceApi {
                 latitude = lat,
                 longitude = lng,
                 radius = radius
-        ).execute().body() ?: return emptyList()
-        return matchAmadeusPlacesToOur(response)
+        ).execute().body()
+
+        return if (response == null) {
+            auth()
+            emptyList()
+        } else {
+            matchAmadeusPlacesToOur(response)
+        }
     }
 
     override fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): List<Place> {
@@ -52,9 +52,14 @@ class AmadeusPlaceApi : PlaceApi {
                 radius = radius,
                 pageLimit = pageLimit,
                 pageOffset = pageOffset
-        ).execute().body() ?: return emptyList()
+        ).execute().body()
 
-        return matchAmadeusPlacesToOur(response)
+        return if (response == null) {
+            auth()
+            emptyList()
+        } else {
+            matchAmadeusPlacesToOur(response)
+        }
     }
 
     private fun matchAmadeusPlacesToOur(response: PlaceRequestResult): List<Place> {
@@ -66,5 +71,17 @@ class AmadeusPlaceApi : PlaceApi {
                     latitude = data.geoCode?.latitude ?: 0.0
             )
         } ?: emptyList()
+    }
+
+    private fun auth() {
+        val response = api.auth(
+                clientId = config.clientId,
+                clientSecret = config.clientSecret
+        ).execute()
+
+
+        if (response.body() != null) {
+            config.token = response.body()?.accessToken ?: ""
+        }
     }
 }
