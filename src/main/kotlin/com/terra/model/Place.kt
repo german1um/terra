@@ -40,6 +40,6 @@ class Place (
 }
 
 enum class PlaceProvider(val value: Int) {
-    MONGO(0),
+    TERRA(0),
     AMADEUS(1)
 }
