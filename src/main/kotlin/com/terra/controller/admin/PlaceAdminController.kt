@@ -16,6 +16,12 @@ class PlaceAdminController(@Autowired val placeService: PlaceService, @Autowired
         return placeService.getAllPlaces()
     }
 
+    @GetMapping("/places/{id}")
+    fun place(@PathVariable("id") id: String): Place {
+        return placeService.getPlaceById(id)
+    }
+
+
     @PostMapping("/places")
     fun save(place: Place) {
         placeService.save(place)

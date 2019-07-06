@@ -7,7 +7,9 @@ import com.terra.model.PlaceProvider.AMADEUS
 import com.terra.model.PlaceProvider.TERRA
 import com.terra.repository.PlaceRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired val amadeusApi: AmadeusPlaceApi) {
@@ -69,6 +71,13 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
 
     fun getAllPlaces(): List<Place> {
         return placeRepository.findAll()
+    }
+
+    fun getPlaceById(id: String): Place {
+        return placeRepository.findById(id).orElseThrow {
+            ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Place Not Found")
+        }
     }
 
 }
