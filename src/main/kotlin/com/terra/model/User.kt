@@ -7,15 +7,20 @@ import java.util.*
 class User(
         val id: String,
         val tokens: MutableList<Token>,
-        val info: UserInfo
+        val info: UserInfo,
+        val seenPlaces: MutableList<String> = mutableListOf()
 ) {
     constructor(token: Token) : this(UUID.randomUUID().toString(), mutableListOf(token), UserInfo())
 }
 
-class Token(val token: String,
-            val type: TokenType
+class Token(
+        val token: String,
+        val type: TokenType
 ) {
-    constructor(token: String, type: Int) : this(
+    constructor(
+            token: String,
+            type: Int
+    ) : this (
             token,
             TokenType.values().find { it.value == type } ?: TokenType.ODNOKLASSNIKI
     )

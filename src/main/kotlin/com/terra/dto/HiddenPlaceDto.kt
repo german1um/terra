@@ -3,7 +3,7 @@ package com.terra.dto
 import com.terra.model.Place
 import com.terra.model.PlaceCategory.DEFAULT
 
-class PlaceDto(
+class HiddenPlaceDto(
         val id: String = "",
         val name: String,
         val description: String = "placeholder",
@@ -22,4 +22,3 @@ class PlaceDto(
             place.category.value
     )
 }
-

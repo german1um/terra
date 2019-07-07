@@ -11,12 +11,22 @@ import org.springframework.stereotype.Service
 class UserService(@Autowired val userRepository: UserRepository) {
 
     fun login(token: Token): UserDto {
-        val user = getOrSave(token)
+        val user = getOrSaveByToken(token)
         return UserDto(user.id, user.info)
     }
 
-    fun getOrSave(token: Token): User {
+    fun getOrSaveByToken(token: Token): User {
         return userRepository.findByTokensIn(listOf(token)) ?: userRepository.save(User(token))
+    }
+
+    fun getById(id: String): User {
+        return userRepository.findById(id).get()
+    }
+
+    fun markPlaceAsSeen(userId: String, placeId: String) {
+        val user = getById(userId)
+        user.seenPlaces.add(placeId)
+        userRepository.save(user)
     }
 
 }

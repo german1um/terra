@@ -1,8 +1,9 @@
 package com.terra.service
 
 import com.terra.apis.placeApi.amadeus.AmadeusPlaceApi
-import com.terra.dto.PlaceDto
+import com.terra.dto.HiddenPlaceDto
 import com.terra.model.Place
+import com.terra.model.PlaceProvider
 import com.terra.model.PlaceProvider.AMADEUS
 import com.terra.model.PlaceProvider.TERRA
 import com.terra.repository.PlaceRepository
@@ -14,24 +15,11 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired val amadeusApi: AmadeusPlaceApi) {
 
-    fun getPlacesInRadius(lat: Double, lng: Double, radius: Int, provider: Int = -1): List<PlaceDto> {
-        val places = when (provider) {
-            TERRA.value -> getMongoPlacesInRadius(lat, lng, radius)
-            AMADEUS.value -> getAmadeusPlacesInRadius(lat, lng, radius)
-            else -> getAllPlacesInRadius(lat, lng, radius)
+    fun getPlacesInRadius(lat: Double, lng: Double, radius: Int, provider: PlaceProvider): List<Place> {
+        return when (provider) {
+            TERRA -> getMongoPlacesInRadius(lat, lng, radius)
+            AMADEUS -> getAmadeusPlacesInRadius(lat, lng, radius)
         }
-
-        return places.map { PlaceDto(it.id, it.name, it.description, it.timesVisited, it.longitude, it.latitude) }
-    }
-
-    fun getAllPlacesInRadius(lat: Double, lng: Double, radius: Int): List<Place> {
-        val places = mutableListOf<Place>()
-
-        places.addAll(getAmadeusPlacesInRadius(lat, lng, radius))
-
-        places.addAll(getMongoPlacesInRadius(lat, lng, radius))
-
-        return places
     }
 
     private fun getMongoPlacesInRadius(lat: Double, lng: Double, radius: Int): List<Place> {
@@ -40,21 +28,37 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
                 lat + radius,
                 lng - radius,
                 lng + radius
-        )
+        ).filter { it.provider != AMADEUS }
     }
 
-    fun getAmadeusPlacesInRadius(lat: Double, lng: Double, radius: Int): List<Place> {
+    private fun getAmadeusPlacesInRadius(lat: Double, lng: Double, radius: Int): List<Place> {
         return amadeusApi.places(lat, lng, radius)
     }
 
-    fun save(placeDto: PlaceDto) {
+    fun getAllPlacesInRadius(lat: Double, lng: Double, radius: Int): List<Place> {
+        val places = mutableListOf<Place>()
+
+        places.addAll(getMongoPlacesInRadius(lat, lng, radius))
+
+        places.addAll(getAmadeusPlacesInRadius(lat, lng, radius))
+
+        return places
+    }
+
+
+
+    fun getPlaceByProvider(provider: PlaceProvider): List<Place> {
+        return placeRepository.findByProvider(provider)
+    }
+
+    fun save(hiddenPlaceDto: HiddenPlaceDto) {
         placeRepository.save(
                 Place(
-                        name = placeDto.name,
-                        description = placeDto.description,
-                        timesVisited = placeDto.timesVisited,
-                        latitude = placeDto.lat,
-                        longitude = placeDto.lng
+                        name = hiddenPlaceDto.name,
+                        description = hiddenPlaceDto.description,
+                        timesVisited = hiddenPlaceDto.timesVisited,
+                        latitude = hiddenPlaceDto.lat,
+                        longitude = hiddenPlaceDto.lng
                 )
         )
     }
