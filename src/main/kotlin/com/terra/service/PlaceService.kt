@@ -1,11 +1,12 @@
 package com.terra.service
 
 import com.terra.apis.placeApi.amadeus.AmadeusPlaceApi
-import com.terra.dto.HiddenPlaceDto
+import com.terra.dto.PlaceDto
 import com.terra.model.Place
 import com.terra.model.PlaceProvider
 import com.terra.model.PlaceProvider.AMADEUS
 import com.terra.model.PlaceProvider.TERRA
+import com.terra.model.intToPlaceCategory
 import com.terra.repository.PlaceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -51,14 +52,15 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
         return placeRepository.findByProvider(provider)
     }
 
-    fun save(hiddenPlaceDto: HiddenPlaceDto) {
+    fun save(placeDto: PlaceDto) {
         placeRepository.save(
                 Place(
-                        name = hiddenPlaceDto.name,
-                        description = hiddenPlaceDto.description,
-                        timesVisited = hiddenPlaceDto.timesVisited,
-                        latitude = hiddenPlaceDto.lat,
-                        longitude = hiddenPlaceDto.lng
+                        name = placeDto.name,
+                        description = placeDto.description,
+                        timesVisited = placeDto.timesVisited,
+                        latitude = placeDto.lat,
+                        longitude = placeDto.lng,
+                        category = intToPlaceCategory(placeDto.category)
                 )
         )
     }
@@ -83,5 +85,4 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
                     HttpStatus.NOT_FOUND, "Place Not Found")
         }
     }
-
 }

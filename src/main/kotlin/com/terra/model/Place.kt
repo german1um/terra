@@ -24,10 +24,7 @@ enum class PlaceProvider(val value: Int) {
 }
 
 fun intToPlaceProvider(i: Int): PlaceProvider {
-    return when (i) {
-        0 -> PlaceProvider.TERRA
-        else -> PlaceProvider.AMADEUS
-    }
+    return PlaceProvider.values().first { it.value == i }
 }
 
 enum class PlaceCategory(val value: Int) {
@@ -35,4 +32,8 @@ enum class PlaceCategory(val value: Int) {
     ARCHITECTURE(1),
     FOOD(2),
     FANCY(3)
+}
+
+fun intToPlaceCategory(i: Int): PlaceCategory {
+    return PlaceCategory.values().first { it.value == i }
 }

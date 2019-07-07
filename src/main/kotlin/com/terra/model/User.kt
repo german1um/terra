@@ -8,8 +8,12 @@ class User(
         val id: String,
         val tokens: MutableList<Token>,
         val info: UserInfo,
-        val seenPlaces: MutableList<String> = mutableListOf()
+        val visitedPlaces: MutableList<String> = mutableListOf()
 ) {
+    fun visited(place: Place): Boolean {
+        return visitedPlaces.contains(place.id)
+    }
+
     constructor(token: Token) : this(UUID.randomUUID().toString(), mutableListOf(token), UserInfo())
 }
 

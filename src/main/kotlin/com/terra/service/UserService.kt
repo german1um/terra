@@ -1,6 +1,10 @@
 package com.terra.service
 
+import com.terra.controller.domain.PlaceResponse
+import com.terra.dto.HiddenPlaceDto
+import com.terra.dto.OpenPlaceDto
 import com.terra.dto.UserDto
+import com.terra.model.Place
 import com.terra.model.Token
 import com.terra.model.User
 import com.terra.repository.UserRepository
@@ -25,8 +29,27 @@ class UserService(@Autowired val userRepository: UserRepository) {
 
     fun markPlaceAsSeen(userId: String, placeId: String) {
         val user = getById(userId)
-        user.seenPlaces.add(placeId)
+        user.visitedPlaces.add(placeId)
         userRepository.save(user)
+    }
+
+    fun getPlaceResponse(places: MutableList<Place>, userId: String): PlaceResponse {
+        val userPlaces = getById(userId).visitedPlaces
+        val openPlaces = mutableListOf<OpenPlaceDto>()
+        userPlaces.forEach { userPlaceId ->
+            val place = places.find { it.id == userPlaceId }
+
+            if (place != null) {
+                places.remove(place)
+                openPlaces.add(OpenPlaceDto(place))
+            }
+        }
+
+        val hiddenPlaces = places.map { place ->
+            HiddenPlaceDto(place)
+        }
+
+        return PlaceResponse(hiddenPlaces, openPlaces)
     }
 
 }
