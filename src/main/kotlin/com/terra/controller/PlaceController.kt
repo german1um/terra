@@ -36,16 +36,6 @@ class PlaceController(
         placeService.save(placeDto)
     }
 
-    @PostMapping("/places/{placeId}/increase-view-count")
-    private fun increateViewCount(@PathVariable placeId: String, userId: String) {
-
-        if (!userService.isPlaceSeenByUser(placeId, userId)) {
-            val place = placeService.getPlaceById(placeId)
-            place.timesVisited++
-            placeService.save(place)
-        }
-    }
-
     private fun getPlaceResponse(places: MutableList<Place>, userId: String): PlaceResponse {
         val userPlaces = userService.getById(userId).seenPlaces
         val openPlaces = mutableListOf<OpenPlaceDto>()
