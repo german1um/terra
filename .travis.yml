@@ -1,0 +1,21 @@
+language: java
+
+cache:
+  directories:
+    - "$HOME/google-cloud-sdk/"
+
+services:
+  - docker
+
+script:
+# install gcloud sdk
+  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+# unencrypt key file
+  - openssl aes-256-cbc -K $encrypted_9c42a3261de5_key -iv $encrypted_9c42a3261de5_iv -in mimetic-surfer-241512-8b05e0bd7041.json.enc -out mimetic-surfer-241512-8b05e0bd7041.json -d
+  # - source /home/travis/google-cloud-sdk/path.bash.inc
+  - gcloud auth activate-service-account --key-file=mimetic-surfer-241512-8b05e0bd7041.json
+  - docker login -u _json_key -p "$(cat mimetic-surfer-241512-8b05e0bd7041.json)" https://gcr.io
+# Build the app
+  - ./gradlew bootjar
+  - docker build -t ${IMAGE_NAME}:${TRAVIS_BRANCH} .
+  - docker push ${IMAGE_NAME}:${TRAVIS_BRANCH}
