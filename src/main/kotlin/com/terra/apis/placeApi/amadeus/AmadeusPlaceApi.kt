@@ -36,7 +36,7 @@ class AmadeusPlaceApi : PlaceApi {
 
         return if (response == null) {
             auth()
-            emptyList()
+            places(lat, lng, radius)
         } else {
             matchAmadeusPlacesToOur(response)
         }
@@ -54,7 +54,7 @@ class AmadeusPlaceApi : PlaceApi {
 
         return if (response == null) {
             auth()
-            emptyList()
+            places(lat, lng, radius, pageLimit, pageOffset)
         } else {
             matchAmadeusPlacesToOur(response)
         }

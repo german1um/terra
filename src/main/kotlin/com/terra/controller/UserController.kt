@@ -15,5 +15,4 @@ class UserController(@Autowired val userService: UserService) {
 
         return userService.login(Token(token, provider))
     }
-
 }
