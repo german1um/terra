@@ -23,7 +23,7 @@ class PlaceAdminController(@Autowired val placeService: PlaceService, @Autowired
 
 
     @PostMapping("/places")
-    fun save(place: Place) {
+    fun save(@RequestBody place: Place) {
         placeService.save(place)
     }
 

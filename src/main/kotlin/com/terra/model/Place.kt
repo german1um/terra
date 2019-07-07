@@ -9,7 +9,7 @@ class Place (
         val id: String = UUID.randomUUID().toString(),
         val name: String = "",
         val description: String = "",
-        val timesVisited: Int = 0,
+        var timesVisited: Int = 0,
         val longitude: Double = 0.0,
         val latitude: Double = 0.0,
         val category: PlaceCategory = DEFAULT,

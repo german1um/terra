@@ -8,6 +8,7 @@ import com.terra.service.UserActionService
 import com.terra.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -35,6 +36,21 @@ class PlaceController(
         placeService.save(placeDto)
     }
 
+    @PostMapping("/places/{placeId}/increase-view-count")
+    private fun increateViewCount(@PathVariable placeId: String, userId: String) {
+
+        if (!userService.isPlaceSeenByUser(placeId, userId)) {
+            val place = placeService.getPlaceById(placeId)
+            place.timesVisited++
+            placeService.save(place)
+        }
+    }
+
+    private fun getPlaceResponse(places: MutableList<Place>, userId: String): PlaceResponse {
+        val userPlaces = userService.getById(userId).seenPlaces
+        val openPlaces = mutableListOf<OpenPlaceDto>()
+        userPlaces.forEach { userPlaceId ->
+            val place = places.find { it.id == userPlaceId }
 
 //    @GetMapping("/places")
 //    fun get(provider: Int, userId: String): PlaceResponse {
@@ -48,5 +64,11 @@ class PlaceController(
 //        placeService.save(hiddenPlaceDto)
 //    }
 
+        val hiddenPlaces = places.map { place ->
+            HiddenPlaceDto(place)
+        }
+
+        return PlaceResponse(hiddenPlaces, openPlaces)
+    }
 
 }

@@ -52,4 +52,14 @@ class UserService(@Autowired val userRepository: UserRepository) {
         return PlaceResponse(hiddenPlaces, openPlaces)
     }
 
+    fun isPlaceSeenByUser(placeId: String, userId: String): Boolean {
+        val user = userRepository.findById(userId)
+
+        return if (user.isPresent) {
+            user.get().seenPlaces.contains(placeId)
+        } else {
+            false
+        }
+    }
+
 }
