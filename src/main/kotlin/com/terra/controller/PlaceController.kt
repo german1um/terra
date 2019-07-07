@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RestController
 class PlaceController(@Autowired val placeService: PlaceService) {
 
 
+    @GetMapping("/places/getInRadius")
+    fun getInRadius(lat: Double, lng: Double, radius: Int, provider: Int): List<PlaceDto> {
+        return placeService.getPlacesInRadius(lat, lng, radius, provider)
+    }
 
     @GetMapping("/places")
-    fun places(lat: Double, lng: Double, radius: Int, provider: Int): List<PlaceDto> {
-        return placeService.getPlacesInRadius(lat, lng, radius, provider)
+    fun get(provider: Int): List<PlaceDto> {
+        return placeService.getAllPlaces().map { PlaceDto(it) }
     }
 
     @PostMapping("/places")

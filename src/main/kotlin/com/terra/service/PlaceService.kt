@@ -21,7 +21,7 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
             else -> getAllPlacesInRadius(lat, lng, radius)
         }
 
-        return places.map { PlaceDto(it.name, it.description, it.timesVisited, it.longitude, it.latitude) }
+        return places.map { PlaceDto(it.id, it.name, it.description, it.timesVisited, it.longitude, it.latitude) }
     }
 
     fun getAllPlacesInRadius(lat: Double, lng: Double, radius: Int): List<Place> {
