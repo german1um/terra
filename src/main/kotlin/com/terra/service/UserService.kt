@@ -56,7 +56,7 @@ class UserService(@Autowired val userRepository: UserRepository) {
         val user = userRepository.findById(userId)
 
         return if (user.isPresent) {
-            user.get().seenPlaces.contains(placeId)
+            user.get().visitedPlaces.contains(placeId)
         } else {
             false
         }

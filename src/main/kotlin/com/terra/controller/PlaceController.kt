@@ -1,7 +1,10 @@
 package com.terra.controller
 
 import com.terra.controller.domain.PlaceResponse
+import com.terra.dto.HiddenPlaceDto
+import com.terra.dto.OpenPlaceDto
 import com.terra.dto.PlaceDto
+import com.terra.model.Place
 import com.terra.model.intToPlaceProvider
 import com.terra.service.PlaceService
 import com.terra.service.UserActionService
@@ -35,30 +38,4 @@ class PlaceController(
     fun save(placeDto: PlaceDto) {
         placeService.save(placeDto)
     }
-
-    private fun getPlaceResponse(places: MutableList<Place>, userId: String): PlaceResponse {
-        val userPlaces = userService.getById(userId).seenPlaces
-        val openPlaces = mutableListOf<OpenPlaceDto>()
-        userPlaces.forEach { userPlaceId ->
-            val place = places.find { it.id == userPlaceId }
-
-//    @GetMapping("/places")
-//    fun get(provider: Int, userId: String): PlaceResponse {
-//        val places = placeService.getAllPlaces().toMutableList()
-//
-//        return userService.getPlaceResponse(places, userId)
-//    }
-//
-//    @PostMapping("/places")
-//    fun save(hiddenPlaceDto: HiddenPlaceDto) {
-//        placeService.save(hiddenPlaceDto)
-//    }
-
-        val hiddenPlaces = places.map { place ->
-            HiddenPlaceDto(place)
-        }
-
-        return PlaceResponse(hiddenPlaces, openPlaces)
-    }
-
 }
