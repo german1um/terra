@@ -3,9 +3,10 @@ package com.terra.dto
 import com.terra.model.Place
 import com.terra.model.PlaceCategory.DEFAULT
 import com.terra.model.User
+import java.util.*
 
 class PlaceDto(
-        val id: String,
+        val id: String = UUID.randomUUID().toString(),
         val name: String = "",
         val description: String = "",
         val timesVisited: Int = 0,
