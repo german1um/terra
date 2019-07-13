@@ -26,7 +26,7 @@ class PlaceDto(
             lng = place.lng,
             lat = place.lat,
             category = place.type.value,
-            visited = user.visited(place),
+            visited = user.isVisited(place),
             averageRating = place.rating.average,
             userRate = place.rating.userRatings[user.id] ?: 0
     )
