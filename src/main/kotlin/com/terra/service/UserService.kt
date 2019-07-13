@@ -27,11 +27,15 @@ class UserService(@Autowired val userRepository: UserRepository) {
                     HttpStatus.NOT_FOUND, "User Not Found")
         }
     }
-  
-    fun markPlaceAsSeen(userId: String, placeId: String) {
-        val user = getById(userId)
-        user.visitedPlaces.add(placeId)
-        userRepository.save(user)
+
+    fun isPlaceSeenByUser(placeId: String, userId: String): Boolean {
+        val user = userRepository.findById(userId)
+
+        return if (user.isPresent) {
+            user.get().visitedPlaces.contains(placeId)
+        } else {
+            false
+        }
     }
 
     fun save(user: User): User {

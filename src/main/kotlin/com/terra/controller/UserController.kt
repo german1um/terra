@@ -26,12 +26,12 @@ class UserController(
 
     @PostMapping("/users/{userId}/mark-place-seen")
     fun markPlaceSeen(@PathVariable userId: String, placeId: String): OpenPlaceDto {
-        userService.markPlaceAsSeen(userId, placeId)
+        userActionService.markPlaceAsSeen(userId, placeId)
 
         val place = placeService.getById(placeId)
         place.timesVisited++
         placeService.save(place)
-      
+
         return OpenPlaceDto(
                 placeService.getById(placeId)
         )
