@@ -27,7 +27,7 @@ class UserActionService(@Autowired val userService: UserService, @Autowired val 
         return if (!user.isVisited(placeId)) {
             user.visitedPlaces.add(placeId)
             userService.save(user)
-            val place = placeService.getPlaceById(placeId)
+            val place = placeService.getById(placeId)
             place.timesVisited++
             placeService.save(place)
             true
@@ -50,5 +50,18 @@ class UserActionService(@Autowired val userService: UserService, @Autowired val 
     private fun markVisitedPlaces(places: List<Place>, id: String): List<PlaceDto> {
         val user = userService.getById(id)
         return places.map { PlaceDto(it, user) }
+    }
+
+    fun addPlaceRating(placeId: String, userId: String, userRating: Int): PlaceDto {
+        val user = userService.getById(userId)
+        val place = placeService.getById(placeId)
+
+        place.addRating(userId, userRating)
+        placeService.save(place)
+
+        return PlaceDto(
+                place,
+                user
+        )
     }
 }

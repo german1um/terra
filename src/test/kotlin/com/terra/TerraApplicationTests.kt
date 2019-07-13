@@ -2,9 +2,6 @@ package com.terra
 
 import com.terra.model.Place
 import com.terra.repository.PlaceRepository
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`in`
-import org.hamcrest.Matchers.`is`
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,14 +23,13 @@ class TerraApplicationTests {
 
     @Test
     fun savePlace() {
-        val place = Place(name = "firstPlace", lng = 2.4123, lat = 41.3987)
+        val place = Place(name = "firstPlace", lng = 30.4123, lat = 59.3987)
 
         placeRepository.save(place)
 
-        val allInRadius = placeRepository.findAllByLatBetweenAndLngBetween(30.0, 31.0, 59.0, 60.0)
+        val savedPlace = placeRepository.findById(place.id)
 
-        println(allInRadius)
-        assertThat(place, `is`(`in`(allInRadius)))
+        assert(savedPlace.isPresent)
 
         placeRepository.deleteAll()
     }

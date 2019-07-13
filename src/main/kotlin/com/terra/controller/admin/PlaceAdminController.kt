@@ -20,7 +20,7 @@ class PlaceAdminController(
 
     @GetMapping("/places/{id}")
     fun place(@PathVariable("id") id: String): Place {
-        return placeService.getPlaceById(id)
+        return placeService.getById(id)
     }
 
 

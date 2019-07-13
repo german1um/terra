@@ -7,6 +7,7 @@ import com.terra.service.UserActionService
 import com.terra.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -31,4 +32,15 @@ class PlaceController(
     fun save(placeDto: PlaceDto) {
         placeService.save(placeDto)
     }
+
+    @PostMapping("/places/{placeId}/rating")
+    fun addRating(@PathVariable placeId: String, userId: String, userRating: Int): PlaceDto {
+        return userActionService.addPlaceRating(placeId, userId, userRating)
+    }
+
+    @GetMapping("/places/{placeId}/rating")
+    fun getRating(@PathVariable placeId: String): Double {
+        return placeService.getPlaceRating(placeId)
+    }
+
 }

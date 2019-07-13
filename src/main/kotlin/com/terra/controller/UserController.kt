@@ -27,8 +27,9 @@ class UserController(
     @PostMapping("/users/{userId}/mark-place-seen")
     fun markPlaceSeen(@PathVariable userId: String, placeId: String): OpenPlaceDto {
         userActionService.markPlaceAsSeen(userId, placeId)
+
         return OpenPlaceDto(
-                placeService.getPlaceById(placeId)
+                placeService.getById(placeId)
         )
     }
 }

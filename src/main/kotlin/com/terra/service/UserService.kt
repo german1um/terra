@@ -28,7 +28,6 @@ class UserService(@Autowired val userRepository: UserRepository) {
         }
     }
 
-
     fun isPlaceSeenByUser(placeId: String, userId: String): Boolean {
         val user = userRepository.findById(userId)
 
@@ -42,5 +41,4 @@ class UserService(@Autowired val userRepository: UserRepository) {
     fun save(user: User): User {
         return userRepository.save(user)
     }
-
 }
