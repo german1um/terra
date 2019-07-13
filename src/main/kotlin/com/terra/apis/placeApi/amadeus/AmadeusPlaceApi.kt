@@ -1,10 +1,14 @@
 package com.terra.apis.placeApi.amadeus
 
+import com.google.gson.Gson
+import com.terra.apis.placeApi.ApiResponse
 import com.terra.apis.placeApi.PlaceApi
+import com.terra.apis.placeApi.amadeus.entities.AmadeusPoisError
 import com.terra.apis.placeApi.amadeus.entities.PlaceRequestResult
 import com.terra.model.Place
 import com.terra.model.PlaceProvider
 import com.terra.repository.PlaceRepository
+import okhttp3.ResponseBody
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import retrofit2.Retrofit
@@ -31,23 +35,44 @@ class AmadeusPlaceApi(
         auth()
     }
 
-    override fun places(lat: Double, lng: Double, radius: Int): List<Place> {
+    override fun places(lat: Double, lng: Double, radius: Int): ApiResponse {
+        val apiResponse = sendPlaceRequest(lat, lng, radius)
+
+        return if (apiResponse.places == null && apiResponse.error!!.code == 38192) {
+            auth()
+
+            sendPlaceRequest(lat, lng, radius)
+        } else {
+            apiResponse
+        }
+    }
+
+    override fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): ApiResponse {
+        val apiResponse = sendPlaceRequest(lat, lng, radius, pageLimit, pageOffset)
+
+        return if (apiResponse.places == null && apiResponse.error!!.code == 38192) {
+            auth()
+
+            sendPlaceRequest(lat, lng, radius, pageLimit, pageOffset)
+        } else {
+            apiResponse
+        }
+    }
+
+    fun sendPlaceRequest(lat: Double, lng: Double, radius: Int): ApiResponse {
         val response = api.placeByLocationAndRadius(
                 auth = "Bearer ${config.token}",
                 lat = lat,
                 lng = lng,
                 radius = radius
-        ).execute().body()
+        ).execute()
 
-        return if (response == null) {
-            auth()
-            places(lat, lng, radius)
-        } else {
-            matchAmadeusPlacesToOur(response)
-        }
+        val responseBody = response.body() ?: return extractPoisError(response.errorBody()!!)
+
+        return ApiResponse(places = matchAmadeusPlacesToOur(responseBody))
     }
 
-    override fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): List<Place> {
+    fun sendPlaceRequest(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): ApiResponse {
         val response = api.placeByLocationAndRadius(
                 auth = "Bearer ${config.token}",
                 lat = lat,
@@ -55,13 +80,23 @@ class AmadeusPlaceApi(
                 radius = radius,
                 pageLimit = pageLimit,
                 pageOffset = pageOffset
-        ).execute().body()
+        ).execute()
 
-        return if (response == null) {
-            auth()
-            places(lat, lng, radius, pageLimit, pageOffset)
-        } else {
-            matchAmadeusPlacesToOur(response)
+
+        val responseBody = response.body() ?: return extractPoisError(response.errorBody()!!)
+
+        return ApiResponse(places = matchAmadeusPlacesToOur(responseBody))
+    }
+
+    private fun auth() {
+        val response = api.auth(
+                clientId = config.clientId,
+                clientSecret = config.clientSecret
+        ).execute()
+
+
+        if (response.body() != null) {
+            config.token = response.body()?.accessToken ?: ""
         }
     }
 
@@ -86,15 +121,10 @@ class AmadeusPlaceApi(
         } ?: emptyList()
     }
 
-    private fun auth() {
-        val response = api.auth(
-                clientId = config.clientId,
-                clientSecret = config.clientSecret
-        ).execute()
+    private fun extractPoisError(error: ResponseBody): ApiResponse {
+        val errorString = error.string()
+        val amadeusPoisError = Gson().fromJson(errorString, AmadeusPoisError::class.java)
 
-
-        if (response.body() != null) {
-            config.token = response.body()?.accessToken ?: ""
-        }
+        return ApiResponse(error = amadeusPoisError.toAmadeusApiError())
     }
 }
