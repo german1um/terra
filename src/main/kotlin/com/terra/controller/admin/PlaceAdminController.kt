@@ -27,7 +27,7 @@ class PlaceAdminController(@Autowired val placeService: PlaceService, @Autowired
         placeService.save(place)
     }
 
-    @PostMapping("/places/{id}/delete")
+    @DeleteMapping("/places/{id}/delete")
     fun delete(@PathVariable("id") id: String) {
         placeService.delete(id)
     }
