@@ -26,7 +26,7 @@ class TerraApplicationTests {
 
     @Test
     fun savePlace() {
-        val place = Place(name = "firstPlace", longitude = 2.4123, latitude = 41.3987)
+        val place = Place(name = "firstPlace", lng = 2.4123, lat = 41.3987)
 
         placeRepository.save(place)
 

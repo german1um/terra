@@ -1,7 +1,7 @@
 package com.terra.dto
 
 import com.terra.model.Place
-import com.terra.model.PlaceCategory.DEFAULT
+import com.terra.model.PlaceType.HISTORY
 
 class HiddenPlaceDto(
         val id: String = "",
@@ -10,15 +10,15 @@ class HiddenPlaceDto(
         val timesVisited: Int = -1,
         val lng: Double,
         val lat: Double,
-        val category: Int = DEFAULT.value
+        val category: Int = HISTORY.value
 ) {
     constructor(place: Place) : this(
             place.id,
             place.name,
             place.description,
             place.timesVisited,
-            place.longitude,
-            place.latitude,
-            place.category.value
+            place.lng,
+            place.lat,
+            place.type.value
     )
 }

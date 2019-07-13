@@ -58,9 +58,9 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
                         name = placeDto.name,
                         description = placeDto.description,
                         timesVisited = placeDto.timesVisited,
-                        latitude = placeDto.lat,
-                        longitude = placeDto.lng,
-                        category = intToPlaceCategory(placeDto.category)
+                        lat = placeDto.lat,
+                        lng = placeDto.lng,
+                        type = intToPlaceCategory(placeDto.category)
                 )
         )
     }

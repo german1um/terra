@@ -20,8 +20,8 @@ interface AmadeusPlaceApiService {
     @GET("reference-data/locations/pois")
     fun placeByLocationAndRadius(
             @Header("Authorization") auth: String,
-            @Query("latitude") latitude: Double,
-            @Query("longitude") longitude: Double,
+            @Query("lat") lat: Double,
+            @Query("lng") lng: Double,
             @Query("radius") radius: Int,
             @Query("page[limit]") pageLimit: Int = 100,
             @Query("page[offset]") pageOffset: Int = 0

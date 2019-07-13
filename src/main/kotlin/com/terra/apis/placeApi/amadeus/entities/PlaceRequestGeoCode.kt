@@ -8,9 +8,9 @@ class PlaceRequestGeoCode {
 
     @SerializedName("latitude")
     @Expose
-    var latitude: Double? = null
+    var lat: Double? = null
     @SerializedName("longitude")
     @Expose
-    var longitude: Double? = null
+    var lng: Double? = null
 
 }

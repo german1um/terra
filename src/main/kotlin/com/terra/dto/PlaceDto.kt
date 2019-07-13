@@ -1,7 +1,7 @@
 package com.terra.dto
 
 import com.terra.model.Place
-import com.terra.model.PlaceCategory.DEFAULT
+import com.terra.model.PlaceType
 import com.terra.model.User
 import java.util.*
 
@@ -12,7 +12,7 @@ class PlaceDto(
         val timesVisited: Int = 0,
         val lng: Double = 0.0,
         val lat: Double = 0.0,
-        val category: Int = DEFAULT.value,
+        val category: Int = PlaceType.HISTORY.value,
         val visited: Boolean = false
 
 ) {
@@ -21,9 +21,9 @@ class PlaceDto(
             name = place.name,
             description = place.description,
             timesVisited = place.timesVisited,
-            lng = place.longitude,
-            lat = place.latitude,
-            category = place.category.value,
+            lng = place.lng,
+            lat = place.lat,
+            category = place.type.value,
             visited = user.visited(place)
     )
 

@@ -2,8 +2,8 @@ package com.terra.apis.placeApi.amadeus.entities
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.terra.model.PlaceCategory
-import com.terra.model.PlaceCategory.*
+import com.terra.model.PlaceType
+import com.terra.model.PlaceType.*
 
 class PlaceRequestData {
 
@@ -27,12 +27,12 @@ class PlaceRequestData {
     var tags: List<String>? = null
 
 
-    fun matchCategory(): PlaceCategory {
+    fun matchCategory(): PlaceType {
         println(category)
         return when (category) {
             "RESTAURANT" -> FOOD
-            "SIGHTS" -> FANCY
-            else -> DEFAULT
+            "SIGHTS" -> HISTORY
+            else -> HISTORY
         }
     }
 }
