@@ -4,6 +4,7 @@ import com.terra.dto.OpenPlaceDto
 import com.terra.dto.UserDto
 import com.terra.model.Token
 import com.terra.service.PlaceService
+import com.terra.service.UserActionService
 import com.terra.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class UserController(
         @Autowired val userService: UserService,
-        @Autowired val placeService: PlaceService
+        @Autowired val placeService: PlaceService,
+        @Autowired val userActionService: UserActionService
 ) {
 
     @GetMapping("/login")
@@ -24,12 +26,7 @@ class UserController(
 
     @PostMapping("/users/{userId}/mark-place-seen")
     fun markPlaceSeen(@PathVariable userId: String, placeId: String): OpenPlaceDto {
-        userService.markPlaceAsSeen(userId, placeId)
-
-        val place = placeService.getPlaceById(placeId)
-        place.timesVisited++
-        placeService.save(place)
-
+        userActionService.markPlaceAsSeen(userId, placeId)
         return OpenPlaceDto(
                 placeService.getPlaceById(placeId)
         )
