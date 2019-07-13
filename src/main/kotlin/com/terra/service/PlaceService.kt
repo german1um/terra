@@ -47,8 +47,6 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
         return places
     }
 
-
-
     fun getPlaceByProvider(provider: PlaceProvider): List<Place> {
         return placeRepository.findByProvider(provider)
     }

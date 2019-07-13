@@ -17,6 +17,7 @@ class Place (
         val type: PlaceType = HISTORY,
 
         val rating: PlaceRating = PlaceRating(),
+        val imgLinks: List<String> = emptyList(),
 
         val provider: PlaceProvider = PlaceProvider.TERRA,
         val hash: String = "$name$lng$lat"

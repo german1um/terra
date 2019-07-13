@@ -13,6 +13,7 @@ class PlaceDto(
         val lng: Double = 0.0,
         val lat: Double = 0.0,
         val category: Int = PlaceType.HISTORY.value,
+        val imgLinks: List<String> = emptyList(),
         val visited: Boolean = false,
         val averageRating: Double = 0.0,
         val userRate: Int = 0
@@ -26,6 +27,7 @@ class PlaceDto(
             lng = place.lng,
             lat = place.lat,
             category = place.type.value,
+            imgLinks = place.imgLinks,
             visited = user.isVisited(place),
             averageRating = place.rating.average,
             userRate = place.rating.userRatings[user.id] ?: 0
