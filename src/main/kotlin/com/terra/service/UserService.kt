@@ -5,14 +5,16 @@ import com.terra.model.Token
 import com.terra.model.User
 import com.terra.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class UserService(@Autowired val userRepository: UserRepository) {
 
     fun login(token: Token): UserDto {
         val user = getOrSaveByToken(token)
-        return UserDto(user.id, user.info)
+        return UserDto(user.id)
     }
 
     fun getOrSaveByToken(token: Token): User {
@@ -20,14 +22,12 @@ class UserService(@Autowired val userRepository: UserRepository) {
     }
 
     fun getById(id: String): User {
-        return userRepository.findById(id).get()
+        return userRepository.findById(id).orElseThrow {
+            ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User Not Found")
+        }
     }
 
-    fun markPlaceAsSeen(userId: String, placeId: String) {
-        val user = getById(userId)
-        user.visitedPlaces.add(placeId)
-        userRepository.save(user)
-    }
 
     fun isPlaceSeenByUser(placeId: String, userId: String): Boolean {
         val user = userRepository.findById(userId)
@@ -37,6 +37,10 @@ class UserService(@Autowired val userRepository: UserRepository) {
         } else {
             false
         }
+    }
+
+    fun save(user: User): User {
+        return userRepository.save(user)
     }
 
 }
