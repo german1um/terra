@@ -3,6 +3,7 @@ package com.terra.model
 import com.terra.model.PlaceType.HISTORY
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
+import kotlin.collections.HashMap
 
 @Document
 class Place (
@@ -24,15 +25,20 @@ enum class PlaceProvider(val value: Int) {
     AMADEUS(1)
 }
 
-fun intToPlaceProvider(i: Int): PlaceProvider {
-    return PlaceProvider.values().first { it.value == i }
-}
-
 enum class PlaceType(val value: Int) {
     UNDERGRAUND(0),
     FOOD(1),
     HISTORY(2),
     NATURE(3)
+}
+
+data class PlaceRating(
+        var totalRating: Double,
+        val userRatings: HashMap<String, Double>
+)
+
+fun intToPlaceProvider(i: Int): PlaceProvider {
+    return PlaceProvider.values().first { it.value == i }
 }
 
 fun intToPlaceCategory(i: Int): PlaceType {
