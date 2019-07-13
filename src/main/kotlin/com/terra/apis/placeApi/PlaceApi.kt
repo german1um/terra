@@ -9,6 +9,12 @@ interface PlaceApi {
     fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): ApiResponse
 }
 
-interface ApiResponse {
-    val places: List<Place>?
-}
+data class ApiResponse (
+        val places: List<Place>? = null,
+        val error: ApiResponseError? = null
+)
+
+data class ApiResponseError (
+        val code: Int,
+        val message: String
+)

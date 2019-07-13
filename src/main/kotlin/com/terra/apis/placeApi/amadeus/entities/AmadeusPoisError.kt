@@ -2,6 +2,7 @@ package com.terra.apis.placeApi.amadeus.entities
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.terra.apis.placeApi.ApiResponseError
 
 
 class AmadeusPoisError {
@@ -10,6 +11,17 @@ class AmadeusPoisError {
     @Expose
     var errors: List<Error>? = null
 
+
+    fun toAmadeusApiError(): ApiResponseError {
+        return if (errors == null || errors!!.isEmpty()) {
+            ApiResponseError(666, "Unknown error")
+        } else {
+            ApiResponseError(
+                    errors!!.first().code!!.toInt(),
+                    errors!!.first().detail!!
+            )
+        }
+    }
 }
 
 class Error {

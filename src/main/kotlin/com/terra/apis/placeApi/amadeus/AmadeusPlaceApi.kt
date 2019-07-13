@@ -3,7 +3,6 @@ package com.terra.apis.placeApi.amadeus
 import com.google.gson.Gson
 import com.terra.apis.placeApi.ApiResponse
 import com.terra.apis.placeApi.PlaceApi
-import com.terra.apis.placeApi.amadeus.entities.AmadeusApiError
 import com.terra.apis.placeApi.amadeus.entities.AmadeusPoisError
 import com.terra.apis.placeApi.amadeus.entities.PlaceRequestResult
 import com.terra.model.Place
@@ -33,10 +32,10 @@ class AmadeusPlaceApi(
     init {
         api = retrofit.create(AmadeusPlaceApiService::class.java)
 
-        //auth()
+        auth()
     }
 
-    override fun places(lat: Double, lng: Double, radius: Int): AmadeusApiResponse {
+    override fun places(lat: Double, lng: Double, radius: Int): ApiResponse {
         val apiResponse = sendPlaceRequest(lat, lng, radius)
 
         return if (apiResponse.places == null && apiResponse.error!!.code == 38192) {
@@ -48,7 +47,7 @@ class AmadeusPlaceApi(
         }
     }
 
-    override fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): AmadeusApiResponse {
+    override fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): ApiResponse {
         val apiResponse = sendPlaceRequest(lat, lng, radius, pageLimit, pageOffset)
 
         return if (apiResponse.places == null && apiResponse.error!!.code == 38192) {
@@ -60,7 +59,7 @@ class AmadeusPlaceApi(
         }
     }
 
-    fun sendPlaceRequest(lat: Double, lng: Double, radius: Int): AmadeusApiResponse {
+    fun sendPlaceRequest(lat: Double, lng: Double, radius: Int): ApiResponse {
         val response = api.placeByLocationAndRadius(
                 auth = "Bearer ${config.token}",
                 lat = lat,
@@ -68,12 +67,12 @@ class AmadeusPlaceApi(
                 radius = radius
         ).execute()
 
-        val responseBody = response.body() ?: return extractError(response.errorBody()!!)
+        val responseBody = response.body() ?: return extractPoisError(response.errorBody()!!)
 
-        return AmadeusApiResponse(places = matchAmadeusPlacesToOur(responseBody))
+        return ApiResponse(places = matchAmadeusPlacesToOur(responseBody))
     }
 
-    fun sendPlaceRequest(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): AmadeusApiResponse {
+    fun sendPlaceRequest(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): ApiResponse {
         val response = api.placeByLocationAndRadius(
                 auth = "Bearer ${config.token}",
                 lat = lat,
@@ -84,9 +83,9 @@ class AmadeusPlaceApi(
         ).execute()
 
 
-        val responseBody = response.body() ?: return extractError(response.errorBody()!!)
+        val responseBody = response.body() ?: return extractPoisError(response.errorBody()!!)
 
-        return AmadeusApiResponse(places = matchAmadeusPlacesToOur(responseBody))
+        return ApiResponse(places = matchAmadeusPlacesToOur(responseBody))
     }
 
     private fun auth() {
@@ -122,27 +121,10 @@ class AmadeusPlaceApi(
         } ?: emptyList()
     }
 
-    private fun mathAmadeusPoisErrorToOur(amadeusError: AmadeusPoisError): AmadeusApiError {
-        return if (amadeusError.errors == null || amadeusError.errors!!.isEmpty()) {
-            AmadeusApiError(666, "Unknown error")
-        } else {
-            AmadeusApiError(
-                    amadeusError.errors!!.first().code!!.toInt(),
-                    amadeusError.errors!!.first().detail!!
-            )
-        }
-    }
-
-    private fun extractError(error: ResponseBody): AmadeusApiResponse {
+    private fun extractPoisError(error: ResponseBody): ApiResponse {
         val errorString = error.string()
         val amadeusPoisError = Gson().fromJson(errorString, AmadeusPoisError::class.java)
 
-        return AmadeusApiResponse(error = mathAmadeusPoisErrorToOur(amadeusPoisError))
+        return ApiResponse(error = amadeusPoisError.toAmadeusApiError())
     }
 }
-
-data class AmadeusApiResponse (
-        override val places: List<Place>? = null,
-
-        val error: AmadeusApiError? = null
-) : ApiResponse
