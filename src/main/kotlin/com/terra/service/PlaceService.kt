@@ -89,4 +89,8 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
     fun getPlaceRating(placeId: String): Double {
         return getById(placeId).rating.average
     }
+  
+    fun isExistant(id: String): Boolean {
+        return placeRepository.existsById(id)
+    }
 }

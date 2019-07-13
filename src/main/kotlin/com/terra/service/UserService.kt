@@ -14,7 +14,7 @@ class UserService(@Autowired val userRepository: UserRepository) {
 
     fun login(token: Token): UserDto {
         val user = getOrSaveByToken(token)
-        return UserDto(user.id, user.info)
+        return UserDto(user.id)
     }
 
     fun getOrSaveByToken(token: Token): User {
@@ -27,10 +27,14 @@ class UserService(@Autowired val userRepository: UserRepository) {
                     HttpStatus.NOT_FOUND, "User Not Found")
         }
     }
-
+  
     fun markPlaceAsSeen(userId: String, placeId: String) {
         val user = getById(userId)
         user.visitedPlaces.add(placeId)
         userRepository.save(user)
+    }
+
+    fun save(user: User): User {
+        return userRepository.save(user)
     }
 }
