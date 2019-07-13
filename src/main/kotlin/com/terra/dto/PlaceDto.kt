@@ -24,7 +24,7 @@ class PlaceDto(
             lng = place.longitude,
             lat = place.latitude,
             category = place.category.value,
-            visited = user.visited(place)
+            visited = user.isVisited(place)
     )
 
 }

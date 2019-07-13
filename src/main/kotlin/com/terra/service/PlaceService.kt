@@ -85,4 +85,8 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
                     HttpStatus.NOT_FOUND, "Place Not Found")
         }
     }
+
+    fun isExistant(id: String): Boolean {
+        return placeRepository.existsById(id)
+    }
 }
