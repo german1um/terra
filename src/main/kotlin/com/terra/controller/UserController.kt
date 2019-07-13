@@ -28,10 +28,6 @@ class UserController(
     fun markPlaceSeen(@PathVariable userId: String, placeId: String): OpenPlaceDto {
         userActionService.markPlaceAsSeen(userId, placeId)
 
-        val place = placeService.getById(placeId)
-        place.timesVisited++
-        placeService.save(place)
-
         return OpenPlaceDto(
                 placeService.getById(placeId)
         )

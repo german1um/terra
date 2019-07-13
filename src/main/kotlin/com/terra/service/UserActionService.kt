@@ -52,14 +52,6 @@ class UserActionService(@Autowired val userService: UserService, @Autowired val 
         return places.map { PlaceDto(it, user) }
     }
 
-    //todo check, then place is exist by normal method
-    fun isPlaceVisitedByUser(placeId: String, userId: String): Boolean {
-        placeService.getById(placeId)
-        val user = userService.getById(userId)
-
-        return user.visitedPlaces.contains(placeId)
-    }
-
     fun addPlaceRating(placeId: String, userId: String, userRating: Int): PlaceDto {
         val user = userService.getById(userId)
         val place = placeService.getById(placeId)
