@@ -30,7 +30,7 @@ class TerraApplicationTests {
 
         placeRepository.save(place)
 
-        val allInRadius = placeRepository.findAllByLatitudeBetweenAndLongitudeBetween(30.0, 31.0, 59.0, 60.0)
+        val allInRadius = placeRepository.findAllByLatBetweenAndLngBetween(30.0, 31.0, 59.0, 60.0)
 
         println(allInRadius)
         assertThat(place, `is`(`in`(allInRadius)))
