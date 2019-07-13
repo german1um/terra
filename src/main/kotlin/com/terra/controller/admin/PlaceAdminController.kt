@@ -18,7 +18,7 @@ class PlaceAdminController(@Autowired val placeService: PlaceService, @Autowired
 
     @GetMapping("/places/{id}")
     fun place(@PathVariable("id") id: String): Place {
-        return placeService.getPlaceById(id)
+        return placeService.getById(id)
     }
 
 

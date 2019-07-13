@@ -79,10 +79,14 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
         return placeRepository.findAll()
     }
 
-    fun getPlaceById(id: String): Place {
+    fun getById(id: String): Place {
         return placeRepository.findById(id).orElseThrow {
             ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Place Not Found")
         }
+    }
+
+    fun getPlaceRating(placeId: String): Double {
+        return getById(placeId).rating.average
     }
 }

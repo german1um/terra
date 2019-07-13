@@ -30,4 +30,22 @@ class UserActionService(@Autowired val userService: UserService, @Autowired val 
         val user = userService.getById(id)
         return places.map { PlaceDto(it, user) }
     }
+
+    //todo check, then place is exist by normal method
+    fun isPlaceVisitedByUser(placeId: String, userId: String): Boolean {
+        placeService.getById(placeId)
+        val user = userService.getById(userId)
+
+        return user.visitedPlaces.contains(placeId)
+    }
+
+    fun addPlaceRating(placeId: String, userId: String, userRating: Int): Double {
+        userService.getById(userId)
+        val place = placeService.getById(placeId)
+
+        place.addRating(userId, userRating)
+        placeService.save(place)
+
+        return place.rating.average
+    }
 }

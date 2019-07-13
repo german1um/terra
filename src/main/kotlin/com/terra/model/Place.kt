@@ -16,9 +16,21 @@ class Place (
         val lat: Double = 0.0,
         val type: PlaceType = HISTORY,
 
+        val rating: PlaceRating = PlaceRating(),
+
         val provider: PlaceProvider = PlaceProvider.TERRA,
         val hash: String = "$name$lng$lat"
-)
+) {
+
+    fun addRating(userId: String, userRating: Int): Double {
+        if (!rating.userRatings.containsKey(userId)) {
+            rating.average = ((rating.average * rating.userRatings.size) + userRating)/(rating.userRatings.size + 1)
+            rating.userRatings[userId] = userRating
+        }
+
+        return rating.average
+    }
+}
 
 enum class PlaceProvider(val value: Int) {
     TERRA(0),
@@ -32,9 +44,14 @@ enum class PlaceType(val value: Int) {
     NATURE(3)
 }
 
+
+/**
+ * @average - average rating of place
+ * @userRatings - map of ratings by users: <userId, userRating>
+ */
 data class PlaceRating(
-        var totalRating: Double,
-        val userRatings: HashMap<String, Double>
+        var average: Double = 0.0,
+        val userRatings: HashMap<String, Int> = hashMapOf()
 )
 
 fun intToPlaceProvider(i: Int): PlaceProvider {
