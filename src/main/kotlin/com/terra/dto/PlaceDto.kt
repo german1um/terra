@@ -13,7 +13,9 @@ class PlaceDto(
         val lng: Double = 0.0,
         val lat: Double = 0.0,
         val category: Int = PlaceType.HISTORY.value,
-        val visited: Boolean = false
+        val visited: Boolean = false,
+        val averageRating: Double = 0.0,
+        val userRate: Int = 0
 
 ) {
     constructor(place: Place, user: User) : this(
@@ -24,7 +26,9 @@ class PlaceDto(
             lng = place.lng,
             lat = place.lat,
             category = place.type.value,
-            visited = user.visited(place)
+            visited = user.visited(place),
+            averageRating = place.rating.average,
+            userRate = place.rating.userRatings[user.id] ?: 0
     )
 
 }

@@ -34,7 +34,7 @@ class PlaceController(
     }
 
     @PostMapping("/places/{placeId}/addRating")
-    fun addRating(@PathVariable placeId: String, userId: String, userRating: Int): Double {
+    fun addRating(@PathVariable placeId: String, userId: String, userRating: Int): PlaceDto {
         return userActionService.addPlaceRating(placeId, userId, userRating)
     }
 

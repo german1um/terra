@@ -39,13 +39,16 @@ class UserActionService(@Autowired val userService: UserService, @Autowired val 
         return user.visitedPlaces.contains(placeId)
     }
 
-    fun addPlaceRating(placeId: String, userId: String, userRating: Int): Double {
-        userService.getById(userId)
+    fun addPlaceRating(placeId: String, userId: String, userRating: Int): PlaceDto {
+        val user = userService.getById(userId)
         val place = placeService.getById(placeId)
 
         place.addRating(userId, userRating)
         placeService.save(place)
 
-        return place.rating.average
+        return PlaceDto(
+                place,
+                user
+        )
     }
 }
