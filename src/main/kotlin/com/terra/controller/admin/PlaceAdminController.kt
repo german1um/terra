@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/admin")
-class PlaceAdminController(@Autowired val placeService: PlaceService, @Autowired val placeRepository: PlaceRepository) {
+class PlaceAdminController(
+        @Autowired val placeService: PlaceService
+) {
 
 
     @GetMapping("/places")
@@ -27,7 +29,7 @@ class PlaceAdminController(@Autowired val placeService: PlaceService, @Autowired
         placeService.save(place)
     }
 
-    @DeleteMapping("/places/{id}/delete")
+    @DeleteMapping("/places/{id}")
     fun delete(@PathVariable("id") id: String) {
         placeService.delete(id)
     }
