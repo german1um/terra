@@ -1,13 +1,10 @@
 package com.terra.apis.placeApi.amadeus
 
 import com.terra.apis.placeApi.PlaceApi
-import com.terra.apis.placeApi.amadeus.entities.PlaceRequestData
 import com.terra.apis.placeApi.amadeus.entities.PlaceRequestResult
 import com.terra.model.Place
 import com.terra.model.PlaceProvider
 import com.terra.repository.PlaceRepository
-import com.terra.service.PlaceService
-import org.geojson.geometry.Point
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import retrofit2.Retrofit
@@ -37,8 +34,8 @@ class AmadeusPlaceApi(
     override fun places(lat: Double, lng: Double, radius: Int): List<Place> {
         val response = api.placeByLocationAndRadius(
                 auth = "Bearer ${config.token}",
-                latitude = lat,
-                longitude = lng,
+                lat = lat,
+                lng = lng,
                 radius = radius
         ).execute().body()
 
@@ -53,8 +50,8 @@ class AmadeusPlaceApi(
     override fun places(lat: Double, lng: Double, radius: Int, pageLimit: Int, pageOffset: Int): List<Place> {
         val response = api.placeByLocationAndRadius(
                 auth = "Bearer ${config.token}",
-                latitude = lat,
-                longitude = lng,
+                lat = lat,
+                lng = lng,
                 radius = radius,
                 pageLimit = pageLimit,
                 pageOffset = pageOffset
@@ -71,17 +68,17 @@ class AmadeusPlaceApi(
     private fun matchAmadeusPlacesToOur(response: PlaceRequestResult): List<Place> {
         return response.data?.map { data ->
 
-            val hash = "${data.name}${data.geoCode?.longitude ?: 0.0}${data.geoCode?.latitude ?: 0.0}"
+            val hash = "${data.name}${data.geoCode?.lng ?: 0.0}${data.geoCode?.lat ?: 0.0}"
 
             if (!placeRepository.findByHash(hash).isPresent) {
                 placeRepository.save(
                         Place(
                                 name = data.name ?: "",
                                 description = data.tags?.joinToString { str1 -> " #$str1" } ?: "",
-                                longitude = data.geoCode?.longitude ?: 0.0,
-                                latitude = data.geoCode?.latitude ?: 0.0,
+                                lng = data.geoCode?.lng ?: 0.0,
+                                lat = data.geoCode?.lat ?: 0.0,
                                 provider = PlaceProvider.AMADEUS,
-                                category = data.matchCategory()
+                                type = data.matchCategory()
                         ))
             }
 
