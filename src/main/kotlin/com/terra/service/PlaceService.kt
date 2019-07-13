@@ -33,7 +33,8 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
     }
 
     private fun getAmadeusPlacesInRadius(lat: Double, lng: Double, radius: Int): List<Place> {
-        return amadeusApi.places(lat, lng, radius)
+        return emptyList()
+        //return amadeusApi.places(lat, lng, radius)
     }
 
     fun getAllPlacesInRadius(lat: Double, lng: Double, radius: Int): List<Place> {
