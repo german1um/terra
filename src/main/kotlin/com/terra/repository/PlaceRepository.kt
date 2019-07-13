@@ -14,6 +14,6 @@ interface PlaceRepository : MongoRepository<Place, String> {
 
     fun findByProvider(@Param("provider") provider: PlaceProvider): List<Place>
 
-    fun findAllByLatitudeBetweenAndLongitudeBetween(latitudeGT: Double, latitudeLT: Double, longitudeGT: Double, longitudeLT: Double): List<Place>
+    fun findAllByLatBetweenAndLngBetween(latitudeGT: Double, latitudeLT: Double, longitudeGT: Double, longitudeLT: Double): List<Place>
 
 }

@@ -24,7 +24,7 @@ class PlaceService(@Autowired val placeRepository: PlaceRepository, @Autowired v
     }
 
     private fun getMongoPlacesInRadius(lat: Double, lng: Double, radius: Int): List<Place> {
-        return placeRepository.findAllByLatitudeBetweenAndLongitudeBetween(
+        return placeRepository.findAllByLatBetweenAndLngBetween(
                 lat - radius,
                 lat + radius,
                 lng - radius,
